@@ -10,7 +10,7 @@
 
 > A RESTful e-commerce backend built with Spring Boot, MySQL, and JPA/Hibernate.
 > Supports product management, cart operations, stock tracking, and price filtering.
-> 🔐 Spring Security + JWT authentication coming soon.
+
 
 ---
 
@@ -25,7 +25,7 @@
 
 | Layer       | Technology                  |
 |-------------|----------------------------|
-| Language    | Java 17+                   |
+| Language    | Java 25                    |
 | Framework   | Spring Boot                |
 | Database    | MySQL                      |
 | ORM         | Spring Data JPA / Hibernate|
