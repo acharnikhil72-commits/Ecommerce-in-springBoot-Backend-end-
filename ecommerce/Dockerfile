@@ -1,23 +1,24 @@
 # syntax=docker/dockerfile:1
-
-FROM maven:3.9.9-eclipse-temurin-25 AS build
+ 
+# ---- Build stage ----
+FROM eclipse-temurin:25-jdk AS build
 WORKDIR /workspace/app
-
-COPY pom.xml ./
-RUN mvn -B -DskipTests dependency:go-offline
-
-COPY src ./src
-RUN mvn -B -DskipTests package
-
+ 
+# Copy Maven wrapper and pom first (better layer caching)
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline -B
+ 
+# Copy source and build
+COPY src src
+RUN ./mvnw clean package -DskipTests -B
+ 
+# ---- Run stage ----
 FROM eclipse-temurin:25-jre
 WORKDIR /app
-
 COPY --from=build /workspace/app/target/*.jar app.jar
-
+ 
 EXPOSE 8080
-
-ENV DB_URL=jdbc:mysql://localhost:3306/ecommerce \
-    DB_USERNAME=root \
-    DB_PASSWORD=nikhil
-
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
