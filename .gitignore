@@ -1,0 +1,14 @@
+# Backend build output
+ecommerce/target/
+
+# Frontend
+react-ecommerce/node_modules/
+react-ecommerce/dist/
+
+# Env files
+**/.env
+**/.env.local
+
+# OS/editor junk
+.DS_Store
+Thumbs.db

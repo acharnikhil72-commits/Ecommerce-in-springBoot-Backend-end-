@@ -39,15 +39,15 @@ public class C_Service {
         Products pro = p_repository.findById(id)
                 .orElseThrow(() -> new ProductNotFound(id));
 
-        if (Integer.parseInt(pro.getP_quantity()) < q) {
+        if (pro.getP_quantity() == null || pro.getP_quantity() < q) {
             throw new OutofStock(id);
         }
 
         addToCart(pro, q);
 
-        int crtquantity = Integer.parseInt(pro.getP_quantity());
+        int crtquantity = pro.getP_quantity();
         if (crtquantity > 0) {
-            pro.setP_quantity(String.valueOf(crtquantity - q));
+            pro.setP_quantity(crtquantity - q);
             p_repository.save(pro);
         }
         return pro;
@@ -55,7 +55,7 @@ public class C_Service {
 
     @Transactional
     public Cart addToCart(Products pro, int q) {
-        int qt = Integer.parseInt(pro.getP_quantity());
+        int qt = pro.getP_quantity() != null ? pro.getP_quantity() : 0;
         if (qt >= q) {
 
             Cart cart = new Cart();
@@ -78,7 +78,7 @@ public class C_Service {
         if (cart == null)
             return null;
         Long unitPrice = cart.getP_price();
-        int quantity = Integer.parseInt(cart.getP_quantity());
+        int quantity = cart.getP_quantity() != null ? Integer.parseInt(cart.getP_quantity()) : 0;
 
         Long totalPrice = unitPrice * quantity;
         cart.setTotalPrice(totalPrice);
@@ -105,9 +105,9 @@ public class C_Service {
         if (existing == null) {
             return null;
         } else {
-            int cc = Integer.parseInt(existing.getP_quantity());
+            int cc = existing.getP_quantity() != null ? existing.getP_quantity() : 0;
 
-            existing.setP_quantity(String.valueOf(cc + cr));
+            existing.setP_quantity(cc + cr);
             existing.setP_name(p.getP_name());
             existing.setP_price(p.getP_price());
             p_repository.save(existing);

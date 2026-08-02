@@ -16,8 +16,8 @@ import com.ecommerce.Database.Cart;
 import com.ecommerce.Database.Products;
 import com.ecommerce.Service.C_Service;
 
-@CrossOrigin(origins = "*")
 @RestController
+
 public class Controller {
 
     public final C_Service c_service;
@@ -47,9 +47,13 @@ public class Controller {
     }
 
     @GetMapping("/getproduct/add_to_cart/buynow")
-    public Cart calculateTotalPrice(Cart cart) {
+    public Cart calculateTotalPrice(@RequestParam(required = false) Long price,
+            @RequestParam(defaultValue = "1") int quantity) {
+        Cart cart = new Cart();
+        cart.setP_quantity(String.valueOf(quantity));
+        cart.setP_price(price != null ? price : 0L);
+        cart.setTotalPrice((price != null ? price : 0L) * quantity);
         return c_service.calculateTotalPrice(cart);
-
     }
 
     @PutMapping("/update_product/{id}")
